@@ -35,7 +35,7 @@ class DialogueCreate(DialogueBase):
     system_role: Optional[str] = Field(title='系统角色的人设', default='你是一个乐于助人的助手。')
 
 
-class DialogueUpdate(DialogueBase):
+class DialogueUpdate(BaseModel):
     """ 对话的更新模型 """
     new_message: Optional[str] = Field(title='新消息', )
 

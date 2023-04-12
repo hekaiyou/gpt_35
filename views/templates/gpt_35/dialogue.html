@@ -1,0 +1,70 @@
+{% extends 'core/navigation.html' %}
+
+{% block title %}
+我的对话
+{% endblock %}
+
+{% block main %}
+<div id="details-content"></div>
+{% endblock %}
+
+{% block operate_right_bottom %}
+<button id="newItem">新对话</button>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    var loadItemSwitch = false;
+    var loadItemSkip = 0;
+    var loadItemMark = true;
+    function loadItemData() {
+        if (!loadItemMark) {
+            return;
+        }
+        loadItemMark = false;
+        let searchData = { 'limit': 20, 'skip': loadItemSkip };
+        utilAjax(
+            type = 'GET',
+            url = '/api/gpt_35/dialogue/free/',
+            data = searchData,
+            data_format = 'query',
+            check = {},
+            success = function (data, textStatus) {
+                if (data['items'].length == 20) {
+                    loadItemSwitch = true;
+                } else {
+                    loadItemSwitch = false;
+                }
+                loadItemSkip += data['items'].length;
+                data['items'].forEach(function (value, index) {
+                    $('#details-content').append('<details class="itemDetails" onclick="event.preventDefault()" id="' + value['id'] + '"><summary>' + value['dialogue_name'] + '</summary></details>');
+                });
+                $('.itemDetails').click(function () {
+                    window.location.href = '/view/gpt_35/dialogue/message/' + $(this).attr('id') + '/';
+                });
+            },
+            complete = function (request, textStatus) {
+                loadItemMark = true;
+            },
+            success_reminder = false,
+            not_close = false,
+        );
+    }
+    $(document).ready(function () {
+        loadItemData();
+        $('#newItem').click(function () {
+            window.location.href = '/view/gpt_35/dialogue/create/';
+        });
+    });
+    $(window).scroll(function () {
+        if (loadItemSwitch) {
+            var w_h = parseFloat($(window).height());
+            var doc_h = $(document).height();
+            totalheight = w_h + parseFloat($(window).scrollTop()) + 2;
+            if (totalheight >= doc_h) {
+                loadItemData();
+            }
+        }
+    });
+</script>
+{% endblock %}
