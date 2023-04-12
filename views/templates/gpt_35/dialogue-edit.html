@@ -35,9 +35,11 @@
 </form>
 {% endblock %}
 
-{% block operate_right_bottom %}
+{% block operate_bottom %}
 {% if item_id %}
-<button id="deleteItem">删除</button>
+<suspended-right>
+    <button id="deleteItem">删除</button>
+</suspended-right>
 {% endif %}
 {% endblock %}
 

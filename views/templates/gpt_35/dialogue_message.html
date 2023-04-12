@@ -17,31 +17,25 @@
 {% endblock %}
 
 {% block main %}
-<div class="wrapper">
-    <div class="header">header</div>
-        <div class="container">
-            <div class="content">
-                <div class="item item-center"><span>昨天 12:35</span></div>
-                <div class="item item-center"><span>你已添加了凡繁烦，现在可以开始聊天了。</span></div>
-                <div class="item item-left"><div class="avatar"><img src="https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=25668084,2889217189&fm=26&gp=0.jpg" /></div><div class="bubble bubble-left">您好,我在武汉，你可以直接送过来吗，我有时间的话，可以自己过去拿<br/>！！！<br/>123</div></div>
-                
-                <div class="item item-right"><div class="bubble bubble-right">hello<br/>你好呀</div><div class="avatar"><img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3313909130,2406410525&fm=15&gp=0.jpg" /></div></div>
-                <div class="item item-center"><span>昨天 13:15</span></div>
-                <div class="item item-right"><div class="bubble bubble-right">刚刚不在，不好意思</div><div class="avatar"><img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3313909130,2406410525&fm=15&gp=0.jpg" /></div></div>
-                <div class="item item-left"><div class="avatar"><img src="https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=25668084,2889217189&fm=26&gp=0.jpg" /></div><div class="bubble bubble-left">没事<br/>你继续！</div></div>
-                <div class="item item-left"><div class="avatar"><img src="https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=25668084,2889217189&fm=26&gp=0.jpg" /></div><div class="bubble bubble-left">看到了<br/>在下面</div></div>
-                <div class="item item-left"><div class="avatar"><img src="https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=25668084,2889217189&fm=26&gp=0.jpg" /></div><div class="bubble bubble-left">你发一个<br/>刚刚网卡了</div></div>
-                <div class="item item-right"><div class="bubble bubble-right">可以<br/>一会儿再发给你</div><div class="avatar"><img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3313909130,2406410525&fm=15&gp=0.jpg" /></div></div>
-            </div>
-        </div>
-    <div class="footer">
-        <textarea></textarea>
-    </div>
+<div id="details-content" class="messagesArea">
+    <div class="item item-center"><span>昨天 12:35</span></div>
+    <div class="item item-center"><span>你已添加了凡繁烦，现在可以开始聊天了。</span></div>
+    <div class="item item-left"><div class="avatar"><img src="/static/gpt_35/image/chat-gpt.svg" /></div><div class="bubble bubble-left">您好,我在武汉，你可以直接送过来吗，我有时间的话，可以自己过去拿<br/>！！！<br/>123</div></div>
+    <div class="item item-right"><div class="bubble bubble-right">hello<br/>你好呀</div><div class="avatar"><img src="/api/bases/me/avata/free/" /></div></div>
+    <div class="item item-center"><span>昨天 13:15</span></div>
+    <div class="item item-right"><div class="bubble bubble-right">刚刚不在，不好意思</div><div class="avatar"><img src="/api/bases/me/avata/free/" /></div></div>
+    <div class="item item-left"><div class="avatar"><img src="/static/gpt_35/image/chat-gpt.svg" /></div><div class="bubble bubble-left">没事<br/>你继续！</div></div>
+    <div class="item item-left"><div class="avatar"><img src="/static/gpt_35/image/chat-gpt.svg" /></div><div class="bubble bubble-left">看到了<br/>在下面</div></div>
+    <div class="item item-left"><div class="avatar"><img src="/static/gpt_35/image/chat-gpt.svg" /></div><div class="bubble bubble-left">你发一个<br/>刚刚网卡了</div></div>
+    <div class="item item-right"><div class="bubble bubble-right">可以<br/>一会儿再发给你</div><div class="avatar"><img src="/api/bases/me/avata/free/" /></div></div>
 </div>
 {% endblock %}
 
-{% block operate_right_bottom %}
-<button id="deleteItem">发送</button>
+{% block operate_bottom %}
+<suspended-center>
+    <textarea id="deleteItem" rows="3"></textarea>
+    <button id="deleteItem" style="margin-top: 0px;">发送</button>
+</suspended-center>
 {% endblock %}
 
 {% block javascript %}
