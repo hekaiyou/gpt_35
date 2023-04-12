@@ -95,7 +95,7 @@ async def gpt_35_update_dialogue_message(
             detail=error_desc,
         )
     doc_update(COL_DIALOGUE, {'_id': dialogue_id}, {'messages': messages})
-    return messages[-1]
+    return {'messages': messages[-2:]}
 
 
 @router.get(

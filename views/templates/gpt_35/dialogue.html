@@ -32,14 +32,14 @@
             data_format = 'query',
             check = {},
             success = function (data, textStatus) {
-                if (data['items'].length == 20) {
+                if (data.items.length == 20) {
                     loadItemSwitch = true;
                 } else {
                     loadItemSwitch = false;
                 }
-                loadItemSkip += data['items'].length;
-                data['items'].forEach(function (value, index) {
-                    $('#details-content').append('<details class="itemDetails" onclick="event.preventDefault()" id="' + value['id'] + '"><summary>' + value['dialogue_name'] + '</summary></details>');
+                loadItemSkip += data.items.length;
+                data.items.forEach(function (value, index) {
+                    $('#details-content').append('<details class="itemDetails" onclick="event.preventDefault()" id="' + value.id + '"><summary>' + value.dialogue_name + '</summary></details>');
                 });
                 $('.itemDetails').click(function () {
                     window.location.href = '/view/gpt_35/dialogue/message/' + $(this).attr('id') + '/';

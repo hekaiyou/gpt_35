@@ -17,32 +17,68 @@
 {% endblock %}
 
 {% block main %}
-<div id="details-content" class="messagesArea">
-    <div class="item item-center"><span>昨天 12:35</span></div>
-    <div class="item item-center"><span>你已添加了凡繁烦，现在可以开始聊天了。</span></div>
-    <div class="item item-left"><div class="avatar"><img src="/static/gpt_35/image/chat-gpt.svg" /></div><div class="bubble bubble-left">您好,我在武汉，你可以直接送过来吗，我有时间的话，可以自己过去拿<br/>！！！<br/>123</div></div>
-    <div class="item item-right"><div class="bubble bubble-right">hello<br/>你好呀</div><div class="avatar"><img src="/api/bases/me/avata/free/" /></div></div>
-    <div class="item item-center"><span>昨天 13:15</span></div>
-    <div class="item item-right"><div class="bubble bubble-right">刚刚不在，不好意思</div><div class="avatar"><img src="/api/bases/me/avata/free/" /></div></div>
-    <div class="item item-left"><div class="avatar"><img src="/static/gpt_35/image/chat-gpt.svg" /></div><div class="bubble bubble-left">没事<br/>你继续！</div></div>
-    <div class="item item-left"><div class="avatar"><img src="/static/gpt_35/image/chat-gpt.svg" /></div><div class="bubble bubble-left">看到了<br/>在下面</div></div>
-    <div class="item item-left"><div class="avatar"><img src="/static/gpt_35/image/chat-gpt.svg" /></div><div class="bubble bubble-left">你发一个<br/>刚刚网卡了</div></div>
-    <div class="item item-right"><div class="bubble bubble-right">可以<br/>一会儿再发给你</div><div class="avatar"><img src="/api/bases/me/avata/free/" /></div></div>
-</div>
+<div id="details-content" class="messagesArea"></div>
 {% endblock %}
 
 {% block operate_bottom %}
 <suspended-center>
-    <textarea id="deleteItem" rows="3"></textarea>
-    <button id="deleteItem" style="margin-top: 0px;">发送</button>
+    <textarea id="new_message" rows="3"></textarea>
+    <button id="updateItem" style="margin-top: 0px;">发送</button>
 </suspended-center>
 {% endblock %}
 
 {% block javascript %}
 <script>
+    function addDetailsContent(value) {
+        if (value.role == 'system') {
+            $('#details-content').append('<div class="item item-center"><span>' + value.content + '</span></div>');
+        } else if (value.role == 'user') {
+            $('#details-content').append('<div class="item item-right"><div class="bubble bubble-right">' + value.content + '</div><div class="avatar"><img src="/api/bases/me/avata/free/" /></div></div>');
+        } else if (value.role == 'assistant') {
+            $('#details-content').append('<div class="item item-left"><div class="avatar"><img src="/static/gpt_35/image/chat-gpt.svg" /></div><div class="bubble bubble-left">' + value.content + '</div></div>');
+        }
+    }
     $(document).ready(function () {
+        utilAjax(
+            type = 'GET',
+            url = '/api/gpt_35/dialogue/{{ item_id }}/free/',
+            data = {},
+            data_format = 'query',
+            check = {},
+            success = function (data, textStatus) {
+                $('#details-content').append('<div class="item item-center"><span>' + data.dialogue_name + '</span></div>');
+                data.messages.forEach(function (value, index) {
+                    addDetailsContent(value);
+                });
+            },
+            complete = function (request, textStatus) { },
+            success_reminder = false,
+            not_close = false,
+        );
         $('#editItem').click(function () {
             window.location.href = '/view/gpt_35/dialogue/update/{{ item_id }}/';
+        });
+        $('#updateItem').click(function () {
+            utilAjax(
+                type = 'PUT',
+                url = '/api/gpt_35/dialogue/{{ item_id }}/message/free/',
+                data = {
+                    'new_message': $('#new_message').val(),
+                },
+                data_format = 'json',
+                check = {
+                    'new_message': [/^\S{1,}$/, '新消息的长度至少需要1位'],
+                },
+                success = function (data, textStatus) { 
+                    data.messages.forEach(function (value, index) {
+                        addDetailsContent(value);
+                    });
+                    $('#new_message').val('');
+                },
+                complete = function (request, textStatus) { },
+                success_reminder = true,
+                not_close = false,
+            );
         });
     });
 </script>
