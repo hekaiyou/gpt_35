@@ -31,11 +31,16 @@
 <script>
     function addDetailsContent(value) {
         let content = value.content;
-        content = content.replace(/\n  ```\n  /g, '\n  <code>  ');
-        content = content.replace(/\n  ```\n/g, '  </code>\n');
-        content = content.replace(/\n\n```\n/g, '\n\n<code>');
-        content = content.replace(/\n```\n\n/g, '</code>\n\n');
         content = content.replace(/( )/g, '&nbsp;');
+        let codeSwitch = true;
+        while (content.search('```')!=-1) {
+            if (codeSwitch) {
+                content = content.replace(/```/, '<code>');
+            } else {
+                content = content.replace(/```/, '</code>');
+            }
+            codeSwitch = !codeSwitch;
+        }
         content = content.replace(/\n/g, '<br />');
         if (value.role == 'system') {
             $('#details-content').append('<div class="item item-center"><span>' + content + '</span></div>');

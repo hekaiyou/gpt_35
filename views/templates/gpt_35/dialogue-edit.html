@@ -24,12 +24,12 @@
 <form id="form-content">
     <label>
         对话名称
-        <input type="text" id="dialogue_name" placeholder="新对话" required>
+        <input type="text" id="dialogue_name" placeholder="新对话" value="新对话" required>
     </label>
     {% if not item_id %}
     <label>
         系统角色的人设
-        <input type="text" id="system_role" placeholder="你是一个乐于助人的助手。" required>
+        <input type="text" id="system_role" placeholder="你是一个乐于助人的助手。" value="你是一个乐于助人的助手。" required>
     </label>
     {% endif %}
 </form>
