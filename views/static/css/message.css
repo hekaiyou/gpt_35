@@ -82,3 +82,10 @@
     border-radius: 50%;
     min-width: 42px;
 }
+
+.item code {
+    color: #ffffff;
+    background-color: #000000;
+    white-space: normal;
+    word-break: break-all;
+}
