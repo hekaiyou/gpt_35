@@ -1,5 +1,5 @@
 .messagesArea {
-    margin-bottom: 155px;
+    margin-bottom: 100px;
 }
 
 .bubble {
@@ -13,6 +13,7 @@
 
 .item-left .bubble {
     margin-left: 15px;
+    margin-right: 47px;
     background-color: #f1f3f4;
 }
 
@@ -30,6 +31,7 @@
 
 .item-right .bubble {
     margin-right: 15px;
+    margin-left: 47px;
     background-color: #9eea6a;
 }
 
@@ -77,10 +79,10 @@
 }
 
 .avatar img {
-    width: 42px;
-    height: 42px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    min-width: 42px;
+    min-width: 32px;
 }
 
 .item code {

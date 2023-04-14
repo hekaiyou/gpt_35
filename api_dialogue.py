@@ -6,7 +6,7 @@ from core.dependencies import get_paginate_parameters
 from core.dynamic import get_apis_configs
 from apis.bases.models import UserGlobal, Paginate
 from apis.bases.api_me import read_me_info
-from .models import COL_DIALOGUE, DialogueBase, DialogueCreate, DialogueUpdate, DialogueRead
+from .models import COL_DIALOGUE, DialogueBase, DialogueRead, DialogueMessageUpdate
 from .validate import DialogueObjIdParams, get_me_dialogue
 from .utils import gpt_35_api
 
@@ -18,7 +18,7 @@ router = APIRouter(prefix='/dialogue', )
     response_model=DialogueRead,
     summary='创建对话 (无权限)',
 )
-async def gpt_35_create_dialogue(create_data: DialogueCreate,
+async def gpt_35_create_dialogue(create_data: DialogueBase,
                                  user: UserGlobal = Depends(read_me_info)):
     create_json = jsonable_encoder(create_data)
     create_json['messages'] = [
@@ -70,6 +70,9 @@ async def gpt_35_update_dialogue(dialogue_id: DialogueObjIdParams,
                                  user: UserGlobal = Depends(read_me_info)):
     dialogue_data = get_me_dialogue(dialogue_id, user)
     update_json = update_data.dict(exclude_unset=True)
+    messages = dialogue_data['messages']
+    messages[0]['content'] = update_json['system_role']
+    update_json['messages'] = messages
     doc_update(COL_DIALOGUE, {'_id': dialogue_id}, update_json)
     return {}
 
@@ -80,7 +83,7 @@ async def gpt_35_update_dialogue(dialogue_id: DialogueObjIdParams,
 )
 async def gpt_35_update_dialogue_message(
     dialogue_id: DialogueObjIdParams,
-    update_data: DialogueUpdate,
+    update_data: DialogueMessageUpdate,
     user: UserGlobal = Depends(read_me_info)):
     dialogue_data = get_me_dialogue(dialogue_id, user)
     update_json = update_data.dict(exclude_unset=True)

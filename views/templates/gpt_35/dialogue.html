@@ -55,7 +55,28 @@
     $(document).ready(function () {
         loadItemData();
         $('#newItem').click(function () {
-            window.location.href = '/view/gpt_35/dialogue/create/';
+            // 方案一: 跳转到创建页面
+            // window.location.href = '/view/gpt_35/dialogue/create/';
+            // 方案二: 直接以默认值创建后跳转到消息页面
+            utilAjax(
+                type = 'POST',
+                url = '/api/gpt_35/dialogue/free/',
+                data = {
+                    'dialogue_name': '新对话',
+                    'system_role': '你是一个乐于助人的助手。',
+                },
+                data_format = 'json',
+                check = {
+                    'dialogue_name': [/^\S{2,}$/, '对话名称的长度至少需要2位'],
+                    'system_role': [/^\S{5,}$/, '系统角色的人设的长度至少需要5位'],
+                },
+                success = function (data, textStatus) {
+                    window.location.href = '/view/gpt_35/dialogue/message/' + data._id + '/';
+                },
+                complete = function (request, textStatus) { },
+                success_reminder = false,
+                not_close = false,
+            );
         });
     });
     $(window).scroll(function () {

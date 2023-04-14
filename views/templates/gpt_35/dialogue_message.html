@@ -22,7 +22,7 @@
 
 {% block operate_bottom %}
 <suspended-center>
-    <textarea id="new_message" rows="3"></textarea>
+    <textarea id="new_message" rows="1" autoHeight="true"></textarea>
     <button id="updateItem" style="margin-top: 0px;">发送</button>
 </suspended-center>
 {% endblock %}
@@ -33,7 +33,7 @@
         let content = value.content;
         content = content.replace(/( )/g, '&nbsp;');
         let codeSwitch = true;
-        while (content.search('```')!=-1) {
+        while (content.search('```') != -1) {
             if (codeSwitch) {
                 content = content.replace(/```/, '<code>');
             } else {
@@ -51,6 +51,20 @@
         }
     }
     $(document).ready(function () {
+        $.fn.autoHeight = function() {
+            function autoHeight(elem) {
+                elem.style.height = 'auto';
+                elem.scrollTop = 0;  // 防抖动
+                elem.style.height = elem.scrollHeight + 'px';
+            }
+            this.each(function() {
+                autoHeight(this);
+                $(this).on('keyup', function() {
+                    autoHeight(this);
+                });
+            });
+        }
+        $('textarea[autoHeight]').autoHeight(); 
         utilAjax(
             type = 'GET',
             url = '/api/gpt_35/dialogue/{{ item_id }}/free/',
