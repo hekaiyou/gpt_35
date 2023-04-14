@@ -9,7 +9,11 @@
 {% endblock %}
 
 {% block operate_left %}
+{% if item_id %}
+<a href="/view/gpt_35/dialogue/message/{{ item_id }}/">返回</a>
+{% else %}
 <a href="javascript:history.back(-1)">返回</a>
+{% endif %}
 {% endblock %}
 
 {% block operate_right_top %}
