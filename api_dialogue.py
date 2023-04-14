@@ -1,6 +1,7 @@
 import os
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.encoders import jsonable_encoder
+from fastapi.responses import StreamingResponse
 from core.database import doc_create, doc_delete, doc_update, paginate_find
 from core.dependencies import get_paginate_parameters
 from core.dynamic import get_apis_configs
@@ -8,7 +9,7 @@ from apis.bases.models import UserGlobal, Paginate
 from apis.bases.api_me import read_me_info
 from .models import COL_DIALOGUE, DialogueBase, DialogueRead, DialogueMessageUpdate
 from .validate import DialogueObjIdParams, get_me_dialogue
-from .utils import gpt_35_api
+from .utils import gpt_35_api, gpt_35_api_stream
 
 router = APIRouter(prefix='/dialogue', )
 
@@ -99,6 +100,48 @@ async def gpt_35_update_dialogue_message(
         )
     doc_update(COL_DIALOGUE, {'_id': dialogue_id}, {'messages': messages})
     return {'messages': messages[-2:]}
+
+
+@router.put(
+    '/{dialogue_id}/message/stream/free/',
+    summary='更新对话消息 (流|无权限)',
+)
+async def gpt_35_update_dialogue_message_stream(
+    dialogue_id: DialogueObjIdParams,
+    update_data: DialogueMessageUpdate,
+    user: UserGlobal = Depends(read_me_info)):
+    dialogue_data = get_me_dialogue(dialogue_id, user)
+    update_json = update_data.dict(exclude_unset=True)
+    messages = dialogue_data['messages']
+    messages.append({'role': 'user', 'content': update_json['new_message']})
+    module = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
+    configs = get_apis_configs(module)
+    results, error_desc, response = gpt_35_api_stream(
+        configs.openai_api_key,
+        messages,
+    )
+    if not results:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=error_desc,
+        )
+    completion = {'role': '', 'content': ''}
+
+    def data_streamer():
+        for _data in response:
+            if _data['choices'][0]['finish_reason'] == 'stop':
+                messages.append(completion)
+                doc_update(
+                    COL_DIALOGUE,
+                    {'_id': dialogue_id},
+                    {'messages': messages},
+                )
+            for delta_k, delta_v in _data['choices'][0]['delta'].items():
+                completion[delta_k] += delta_v
+                if delta_k == 'content':
+                    yield delta_v
+
+    return StreamingResponse(data_streamer(), media_type='text/event-stream')
 
 
 @router.get(

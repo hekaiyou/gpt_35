@@ -23,7 +23,7 @@
 {% block operate_bottom %}
 <suspended-center>
     <textarea id="new_message" rows="1" autoHeight="true"></textarea>
-    <button id="updateItem" style="margin-top: 0px;">发送</button>
+    <button id="updateItemStream" style="margin-top: 0px;">发送</button>
 </suspended-center>
 {% endblock %}
 
@@ -105,6 +105,49 @@
                 success_reminder = true,
                 not_close = false,
             );
+        });
+        $('#updateItemStream').click(function () {
+            var url = '/api/gpt_35/dialogue/{{ item_id }}/message/stream/free/'
+            var data = {
+                'new_message': $('#new_message').val(),
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.onloadstart = function (e) {
+                console.log('请求发出');
+            };
+            xhr.onprogress = function (e) {
+                console.log('正在发送和加载数据');
+                console.log(e);
+            };
+            xhr.onabort = function (e) {
+                console.log('请求中止, 比如用户调用了abort()方法');
+            };
+            xhr.onerror = function (e) {
+                console.log('请求失败');
+                console.error(xhr.statusText);
+            };
+            xhr.onload = function (e) {
+                console.log('请求成功完成');
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        console.log(xhr.responseText);
+                    } else {
+                        console.error(xhr.statusText);
+                    }
+                }
+            };
+            xhr.ontimeout = function () {
+                console.log('请求超时, 未完成');
+                console.error("The request for " + url + " timed out.");
+            };
+            xhr.onloadend = function (e) {
+                console.log('请求完成, 不管成功或失败');
+            };
+            xhr.open('PUT', url, true);
+            xhr.setRequestHeader('content-type', 'application/json');
+            xhr.getResponseHeader('content-type', 'text/event-stream');
+            xhr.send(JSON.stringify(data));
         });
     });
 </script>
