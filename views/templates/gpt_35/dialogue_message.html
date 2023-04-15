@@ -23,15 +23,13 @@
 {% block operate_bottom %}
 <suspended-center>
     <textarea id="new_message" rows="1" autoHeight="true"></textarea>
-    <button id="updateItemStream" style="margin-top: 0px;">发送</button>
+    <button id="updateItemStream" style="margin-top: 0px;" aria-busy="false">发送</button>
 </suspended-center>
 {% endblock %}
 
 {% block javascript %}
 <script>
-    function addDetailsContent(value) {
-        let content = value.content;
-        content = content.replace(/( )/g, '&nbsp;');
+    function processBubbleCodeBlocks(content) {
         let codeSwitch = true;
         while (content.search('```') != -1) {
             if (codeSwitch) {
@@ -41,7 +39,19 @@
             }
             codeSwitch = !codeSwitch;
         }
+        return content;
+    }
+    function processBubble(content) {
+        content = content.replace(/</g, '&lt;');
+        content = content.replace(/>/g, '&gt;');
+        content = content.replace(/( )/g, '&nbsp;');
+        content = processBubbleCodeBlocks(content);
         content = content.replace(/\n/g, '<br />');
+        return content;
+    }
+    function addDetailsContent(value) {
+        let content = value.content;
+        content = processBubble(content);
         if (value.role == 'system') {
             $('#details-content').append('<div class="item item-center"><span>' + content + '</span></div>');
         } else if (value.role == 'user') {
@@ -111,21 +121,41 @@
             var data = {
                 'new_message': $('#new_message').val(),
             }
-
+            let currentLength = 0;
+            // 请求实时流传输接口
             var xhr = new XMLHttpRequest();
             xhr.onloadstart = function (e) {
-                console.log('请求发出');
+                // 请求发出
+                addDetailsContent({role: 'user', content: $('#new_message').val()});
+                $('#new_message').val('');
+                $('#updateItemStream').attr('disabled', 'disabled');
+                $('#updateItemStream').attr('aria-busy', 'true');
+                addDetailsContent({role: 'assistant', content: ''});
             };
             xhr.onprogress = function (e) {
-                console.log('正在发送和加载数据');
-                console.log(e);
+                // 正在发送和加载数据
+                let currentText = e.target.response.slice(currentLength);
+                if (currentText == '`' || currentText == '``') {
+                    // console.log('Skip(代码关键词不全) Text = ' + currentText);
+                } else if (currentText.search('```') != -1 && currentText.split('```').length-1 != 2) {
+                    // console.log('Skip(代码块没有闭合) Text = ' + currentText);
+                } else {
+                    currentText = processBubble(currentText);
+                    // console.log('currentLength = ' + currentLength + '\n' + '  - SourceText = ' + currentText + '\n  - DisplayText = ' + currentText);
+                    currentLength = e.target.response.length;
+                    $('.bubble-left:last').append(currentText);
+                }
             };
             xhr.onabort = function (e) {
                 console.log('请求中止, 比如用户调用了abort()方法');
             };
             xhr.onerror = function (e) {
-                console.log('请求失败');
+                // 请求失败
                 console.error(xhr.statusText);
+                $('.item-right:last').remove();
+                $('.item-left:last').remove();
+                $('#new_message').val(data['new_message']);
+                addDetailsContent({role: 'system', content: '请求失败'});
             };
             xhr.onload = function (e) {
                 console.log('请求成功完成');
@@ -142,7 +172,9 @@
                 console.error("The request for " + url + " timed out.");
             };
             xhr.onloadend = function (e) {
-                console.log('请求完成, 不管成功或失败');
+                // 请求完成, 不管成功或失败
+                $('#updateItemStream').attr('aria-busy', 'false');
+                $('#updateItemStream').removeAttr('disabled');
             };
             xhr.open('PUT', url, true);
             xhr.setRequestHeader('content-type', 'application/json');
