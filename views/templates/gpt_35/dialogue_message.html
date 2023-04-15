@@ -60,6 +60,12 @@
             $('#details-content').append('<div class="item item-left"><div class="avatar"><img src="/static/gpt_35/image/openai-symbol.svg" /></div><div class="bubble bubble-left">' + content + '</div></div>');
         }
     }
+    function streamDeliveryFailureHandling(new_message, error_content) {
+        $('.item-right:last').remove();
+        $('.item-left:last').remove();
+        $('#new_message').val(new_message);
+        addDetailsContent({role: 'system', content: error_content});
+    }
     $(document).ready(function () {
         $.fn.autoHeight = function() {
             function autoHeight(elem) {
@@ -147,29 +153,31 @@
                 }
             };
             xhr.onabort = function (e) {
-                console.log('请求中止, 比如用户调用了abort()方法');
+                // 请求中止, 比如用户调用了abort()方法
+                streamDeliveryFailureHandling(data['new_message'], '请求中止');
             };
             xhr.onerror = function (e) {
                 // 请求失败
-                console.error(xhr.statusText);
-                $('.item-right:last').remove();
-                $('.item-left:last').remove();
-                $('#new_message').val(data['new_message']);
-                addDetailsContent({role: 'system', content: '请求失败'});
+                streamDeliveryFailureHandling(data['new_message'], '请求失败');
             };
             xhr.onload = function (e) {
-                console.log('请求成功完成');
+                // 请求成功完成
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
-                        console.log(xhr.responseText);
+                        // 请求响应正常
+                        // console.log('CompleteText = ' + xhr.responseText);
                     } else {
-                        console.error(xhr.statusText);
+                        // 请求响应异常
+                        console.error('Response exception: ' + xhr.response);
+                        streamDeliveryFailureHandling(data['new_message'], '请求响应' + xhr.status + '异常');
                     }
                 }
             };
             xhr.ontimeout = function () {
-                console.log('请求超时, 未完成');
-                console.error("The request for " + url + " timed out.");
+                // 请求超时, 未完成
+                console.error('The request for ' + url + ' timed out.');
+                streamDeliveryFailureHandling(data['new_message'], '请求超时');
+                
             };
             xhr.onloadend = function (e) {
                 // 请求完成, 不管成功或失败
