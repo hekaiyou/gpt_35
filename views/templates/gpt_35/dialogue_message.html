@@ -44,7 +44,6 @@
     function processBubble(content) {
         content = content.replace(/</g, '&lt;');
         content = content.replace(/>/g, '&gt;');
-        content = content.replace(/( )/g, '&nbsp;');
         content = processBubbleCodeBlocks(content);
         content = content.replace(/\n/g, '<br />');
         return content;
