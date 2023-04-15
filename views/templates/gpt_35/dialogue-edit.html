@@ -97,8 +97,8 @@
                 },
                 data_format = 'json',
                 check = {
-                    'dialogue_name': [/^\S{2,}$/, '对话名称的长度至少需要2位'],
-                    'system_role': [/^\S{5,}$/, '系统角色的人设的长度至少需要5位'],
+                    'dialogue_name': [/^[^\s]+(\s+[^\s]+)*$/, '对话名称不能为空'],
+                    'system_role': [/^[^\s]+(\s+[^\s]+)*$/, '系统角色的人设不能为空'],
                 },
                 success = function (data, textStatus) { },
                 complete = function (request, textStatus) { },
@@ -117,8 +117,8 @@
                 },
                 data_format = 'json',
                 check = {
-                    'dialogue_name': [/^\S{2,}$/, '对话名称的长度至少需要2位'],
-                    'system_role': [/^\S{5,}$/, '系统角色的人设的长度至少需要5位'],
+                    'dialogue_name': [/^[^\s]+(\s+[^\s]+)*$/, '对话名称不能为空'],
+                    'system_role': [/^[^\s]+(\s+[^\s]+)*$/, '系统角色的人设不能为空'],
                 },
                 success = function (data, textStatus) {
                     window.location.href = '/view/gpt_35/dialogue/message/' + data._id + '/';
