@@ -152,13 +152,14 @@
             xhr.onprogress = function (e) {
                 // 正在发送和加载数据
                 let currentText = e.target.response.slice(currentLength);
-                if (currentText == '`' || currentText == '``') {
-                    // console.log('Skip(代码关键词不全) Text = ' + currentText);
+                if (['`', '``', ' '].indexOf(currentText) != -1) {
+                    // console.log('Skip(关键词不完整) Text = ' + currentText);
                 } else if (currentText.search('```') != -1 && currentText.split('```').length-1 != 2) {
-                    // console.log('Skip(代码块没有闭合) Text = ' + currentText);
+                    // console.log('Skip(代码没有闭合) Text = ' + currentText);
                 } else {
+                    // console.log('currentLength = ' + currentLength + '\n' + '  - SourceText = ' + currentText);
                     currentText = processBubble(currentText);
-                    // console.log('currentLength = ' + currentLength + '\n' + '  - SourceText = ' + currentText + '\n  - DisplayText = ' + currentText);
+                    // console.log('  - DisplayText = ' + currentText);
                     currentLength = e.target.response.length;
                     $('.bubble-left:last').append(currentText);
                 }
