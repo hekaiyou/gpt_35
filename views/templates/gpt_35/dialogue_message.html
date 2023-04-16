@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block operate_left %}
-<a href="/view/gpt_35/dialogue/">返回</a>
+<a id="returnToList" href="javascript:void(0);">返回</a>
 {% endblock %}
 
 {% block operate_right_top %}
@@ -199,6 +199,9 @@
             xhr.setRequestHeader('content-type', 'application/json');
             xhr.getResponseHeader('content-type', 'text/event-stream');
             xhr.send(JSON.stringify(data));
+        });
+        $('#returnToList').click(function () {
+            window.location.href = '/view/gpt_35/dialogue/';
         });
     });
 </script>

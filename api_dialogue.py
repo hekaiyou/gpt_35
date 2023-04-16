@@ -1,4 +1,6 @@
 import os
+import asyncio
+from bson.objectid import ObjectId
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import StreamingResponse
@@ -12,6 +14,31 @@ from .validate import DialogueObjIdParams, get_me_dialogue
 from .utils import gpt_35_api, gpt_35_api_stream
 
 router = APIRouter(prefix='/dialogue', )
+
+
+async def coroutine_task_summary_dialogue(dialogue_id: ObjectId, api_key: str,
+                                          messages: list):
+    """ 协程任务: 总结对话内容 """
+    await asyncio.sleep(25)
+    print(f'待总结内容 = {messages[1:]}')
+    questions = [
+        {
+            'role': 'system',
+            'content': '你是善于总结对话内容的标题作者'
+        },
+        {
+            'role': 'user',
+            'content': f'为以下对话取一个标题\n{messages[1:]}'
+        },
+    ]
+    results, error_desc = gpt_35_api(api_key, questions)
+    await asyncio.sleep(10)
+    if not results:
+        print(f'总结异常 = {error_desc}')
+    else:
+        print(f'总结后的 = {questions[-1:]}')
+    await asyncio.sleep(25)
+    return
 
 
 @router.post(
@@ -75,6 +102,22 @@ async def gpt_35_update_dialogue(dialogue_id: DialogueObjIdParams,
     messages[0]['content'] = update_json['system_role']
     update_json['messages'] = messages
     doc_update(COL_DIALOGUE, {'_id': dialogue_id}, update_json)
+    return {}
+
+
+@router.put(
+    '/{dialogue_id}/name/free/',
+    summary='更新对话名称 (无权限)',
+)
+async def gpt_35_update_dialogue_name(
+    dialogue_id: DialogueObjIdParams,
+    user: UserGlobal = Depends(read_me_info)):
+    dialogue_data = get_me_dialogue(dialogue_id, user)
+    module = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
+    configs = get_apis_configs(module)
+    asyncio.create_task(
+        coroutine_task_summary_dialogue(dialogue_id, configs.openai_api_key,
+                                        dialogue_data['messages']))
     return {}
 
 
