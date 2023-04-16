@@ -56,6 +56,7 @@ async def gpt_35_create_dialogue(create_data: DialogueBase,
         },
     ]
     create_json['create_username'] = user.username
+    create_json['auto_naming'] = True
     doc_create(COL_DIALOGUE, create_json)
     return DialogueRead(**create_json)
 

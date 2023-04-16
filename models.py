@@ -24,6 +24,7 @@ class DialogueBase(BaseModel):
         ],
     )
     create_username: str = Field(title='创建用户名称', )
+    auto_naming: bool = Field(title='是否自动命名', )
     create_time: datetime = datetime.utcnow()
     update_time: datetime = datetime.utcnow()
     """
@@ -49,5 +50,6 @@ class DialogueRead(DialogueBase):
         ],
     )
     create_username: str = Field(title='创建用户名称', )
+    auto_naming: bool = Field(title='是否自动命名', )
     create_time: datetime = datetime.utcnow()
     update_time: datetime = datetime.utcnow()

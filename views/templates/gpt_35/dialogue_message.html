@@ -29,6 +29,8 @@
 
 {% block javascript %}
 <script>
+    var autoNaming = false;
+    var contentUpdates = false;
     function processBubbleCodeBlocks(content) {
         let codeSwitch = true;
         while (content.search('```') != -1) {
@@ -87,7 +89,8 @@
             data_format = 'query',
             check = {},
             success = function (data, textStatus) {
-                $('#details-content').append('<div class="item item-center"><span>' + data.dialogue_name + '</span></div>');
+                autoNaming = data.auto_naming;
+                addDetailsContent({role: 'system', content: data.dialogue_name});
                 data.messages.forEach(function (value, index) {
                     addDetailsContent(value);
                 });
@@ -177,6 +180,7 @@
                     if (xhr.status === 200) {
                         // 请求响应正常
                         // console.log('CompleteText = ' + xhr.responseText);
+                        contentUpdates = true;
                     } else {
                         // 请求响应异常
                         console.error('Response exception: ' + xhr.response);
@@ -201,6 +205,19 @@
             xhr.send(JSON.stringify(data));
         });
         $('#returnToList').click(function () {
+            if (autoNaming && contentUpdates) {
+                utilAjax(
+                    type = 'PUT',
+                    url = '/api/gpt_35/dialogue/{{ item_id }}/name/free/',
+                    data = {},
+                    data_format = 'json',
+                    check = {},
+                    success = function (data, textStatus) { },
+                    complete = function (request, textStatus) { },
+                    success_reminder = false,
+                    not_close = false,
+                );
+            }
             window.location.href = '/view/gpt_35/dialogue/';
         });
     });
