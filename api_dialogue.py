@@ -1,5 +1,6 @@
 import os
 import asyncio
+from loguru import logger
 from bson.objectid import ObjectId
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.encoders import jsonable_encoder
@@ -19,8 +20,6 @@ router = APIRouter(prefix='/dialogue', )
 async def coroutine_task_summary_dialogue(dialogue_id: ObjectId, api_key: str,
                                           messages: list):
     """ 协程任务: 总结对话内容 """
-    await asyncio.sleep(25)
-    print(f'待总结内容 = {messages[1:]}')
     questions = [
         {
             'role': 'system',
@@ -28,16 +27,15 @@ async def coroutine_task_summary_dialogue(dialogue_id: ObjectId, api_key: str,
         },
         {
             'role': 'user',
-            'content': f'为以下对话取一个标题\n{messages[1:]}'
+            'content': f'根据以下内容，取一个简短的标题\n{messages[1:]}'
         },
     ]
     results, error_desc = gpt_35_api(api_key, questions)
-    await asyncio.sleep(10)
     if not results:
-        print(f'总结异常 = {error_desc}')
+        logger.error(f'总结对话内容: {error_desc}')
     else:
-        print(f'总结后的 = {questions[-1:]}')
-    await asyncio.sleep(25)
+        doc_update(COL_DIALOGUE, {'_id': dialogue_id},
+                   {'dialogue_name': questions[-1]['content']})
     return
 
 
@@ -102,6 +100,7 @@ async def gpt_35_update_dialogue(dialogue_id: DialogueObjIdParams,
     messages = dialogue_data['messages']
     messages[0]['content'] = update_json['system_role']
     update_json['messages'] = messages
+    update_json['auto_naming'] = False
     doc_update(COL_DIALOGUE, {'_id': dialogue_id}, update_json)
     return {}
 
@@ -114,6 +113,11 @@ async def gpt_35_update_dialogue_name(
     dialogue_id: DialogueObjIdParams,
     user: UserGlobal = Depends(read_me_info)):
     dialogue_data = get_me_dialogue(dialogue_id, user)
+    if not dialogue_data['auto_naming']:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail='对话已经自定义名称',
+        )
     module = os.path.basename(os.path.dirname(os.path.realpath(__file__)))
     configs = get_apis_configs(module)
     asyncio.create_task(
