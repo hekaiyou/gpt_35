@@ -34,8 +34,11 @@ async def coroutine_task_summary_dialogue(dialogue_id: ObjectId, api_key: str,
     if not results:
         logger.error(f'总结对话内容: {error_desc}')
     else:
+        dialogue_name = questions[-1]['content']
+        for remove in ['“', '”', '"']:
+            dialogue_name = dialogue_name.strip(remove)
         doc_update(COL_DIALOGUE, {'_id': dialogue_id},
-                   {'dialogue_name': questions[-1]['content']})
+                   {'dialogue_name': dialogue_name})
     return
 
 

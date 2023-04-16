@@ -213,12 +213,15 @@
                     data_format = 'json',
                     check = {},
                     success = function (data, textStatus) { },
-                    complete = function (request, textStatus) { },
+                    complete = function (request, textStatus) {
+                        window.location.href = '/view/gpt_35/dialogue/';
+                    },
                     success_reminder = false,
                     not_close = false,
                 );
+            } else {
+                window.location.href = '/view/gpt_35/dialogue/';
             }
-            window.location.href = '/view/gpt_35/dialogue/';
         });
     });
 </script>
