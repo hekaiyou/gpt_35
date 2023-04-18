@@ -76,10 +76,10 @@
 }
 
 .avatar img {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
-    min-width: 32px;
+    min-width: 30px;
 }
 
 .item code {
