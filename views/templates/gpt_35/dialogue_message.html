@@ -18,13 +18,14 @@
 
 {% block main %}
 <div id="details-content" class="messagesArea"></div>
+<br/><br/>
 {% endblock %}
 
 {% block operate_bottom %}
-<suspended-message-vertical>
+<suspended-message-horizontal>
     <textarea id="new_message" rows="1" autoHeight="true"></textarea>
     <button id="updateItemStream" aria-busy="false">发送</button>
-</suspended-message-vertical>
+</suspended-message-horizontal>
 {% endblock %}
 
 {% block javascript %}
