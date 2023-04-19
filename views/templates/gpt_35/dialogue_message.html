@@ -159,6 +159,12 @@
                 addDetailsContent({role: 'assistant', content: ''});
             };
             xhr.onprogress = function (e) {
+                if (!lang && currentLength > 9) {
+                    lang = detectLanguage(e.target.response);
+                    if (lang == 'english') {
+                        $('.bubble-left:last').attr('lang', 'english');
+                    }
+                }
                 // 正在发送和加载数据
                 let currentText = e.target.response.slice(currentLength);
                 if (['`', '``', ' '].indexOf(currentText) != -1) {
@@ -171,12 +177,6 @@
                     // console.log('  - DisplayText = ' + currentText);
                     currentLength = e.target.response.length;
                     $('.bubble-left:last').append(currentText);
-                    if (currentLength > 9 && !lang) {
-                        lang = detectLanguage(e.target.response);
-                        if (lang == 'english') {
-                            $('.bubble-left:last').attr('lang', 'english');
-                        }
-                    }
                 }
             };
             xhr.onabort = function (e) {
