@@ -126,7 +126,8 @@
             );
         });
         $('#updateItemStream').click(function () {
-            if (!/^[^\s]+(\s+[^\s]+)*$/.test($('#new_message').val())) {
+            let dataNewMessage = $('#new_message').val().trim();
+            if (!/^[^\s]+(\s+[^\s]+)*$/.test(dataNewMessage)) {
                 swal({
                     icon: 'info',
                     title: '校验异常',
@@ -138,14 +139,14 @@
             }
             var url = '/api/gpt_35/dialogue/{{ item_id }}/message/stream/free/'
             var data = {
-                'new_message': $('#new_message').val(),
+                'new_message': dataNewMessage,
             }
             let currentLength = 0;
             // 请求实时流传输接口
             var xhr = new XMLHttpRequest();
             xhr.onloadstart = function (e) {
                 // 请求发出
-                addDetailsContent({role: 'user', content: $('#new_message').val()});
+                addDetailsContent({role: 'user', content: dataNewMessage});
                 $('#new_message').val('');
                 $('#new_message').attr('disabled', 'disabled');
                 $('#updateItemStream').attr('disabled', 'disabled');
