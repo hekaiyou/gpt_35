@@ -146,7 +146,6 @@
                 'new_message': dataNewMessage,
             }
             let currentLength = 0;
-            let lang = '';
             // 请求实时流传输接口
             var xhr = new XMLHttpRequest();
             xhr.onloadstart = function (e) {
@@ -159,12 +158,6 @@
                 addDetailsContent({role: 'assistant', content: ''});
             };
             xhr.onprogress = function (e) {
-                if (!lang && currentLength > 9) {
-                    lang = detectLanguage(e.target.response);
-                    if (lang == 'english') {
-                        $('.bubble-left:last').attr('lang', 'english');
-                    }
-                }
                 // 正在发送和加载数据
                 let currentText = e.target.response.slice(currentLength);
                 if (['`', '``', ' '].indexOf(currentText) != -1) {
@@ -192,6 +185,9 @@
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
                         // 请求响应正常
+                        if (detectLanguage(xhr.responseText) == 'english') {
+                            $('.bubble-left:last').attr('lang', 'english');
+                        }
                         // console.log('CompleteText = ' + xhr.responseText);
                         contentUpdates = true;
                     } else {
