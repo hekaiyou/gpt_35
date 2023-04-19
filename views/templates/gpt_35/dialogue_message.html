@@ -6,6 +6,7 @@
 
 {% block custom_head %}
 <link rel="stylesheet" href="/static/gpt_35/css/message.css">
+<script src="/static/bases/js/text-tool.js"></script>
 {% endblock %}
 
 {% block operate_left %}
@@ -48,18 +49,21 @@
         content = content.replace(/</g, '&lt;');
         content = content.replace(/>/g, '&gt;');
         content = processBubbleCodeBlocks(content);
-        content = content.replace(/\n/g, '<br />');
         return content;
     }
     function addDetailsContent(value) {
         let content = value.content;
+        let lang = 'chinese';
+        if (detectLanguage(content) == 'english') {
+            lang = 'english';
+        }
         content = processBubble(content);
         if (value.role == 'system') {
             $('#details-content').append('<div class="item item-center"><span>' + content + '</span></div>');
         } else if (value.role == 'user') {
-            $('#details-content').append('<div class="item item-right"><div class="bubble bubble-right">' + content + '</div><div class="avatar"><img src="/api/bases/me/avata/free/" /></div></div>');
+            $('#details-content').append('<div class="item item-right"><div class="bubble bubble-right" lang="' + lang + '">' + content + '</div><div class="avatar"><img src="/api/bases/me/avata/free/" /></div></div>');
         } else if (value.role == 'assistant') {
-            $('#details-content').append('<div class="item item-left"><div class="avatar"><img src="/static/gpt_35/image/openai-symbol.svg" /></div><div class="bubble bubble-left">' + content + '</div></div>');
+            $('#details-content').append('<div class="item item-left"><div class="avatar"><img src="/static/gpt_35/image/openai-symbol.svg" /></div><div class="bubble bubble-left" lang="' + lang + '">' + content + '</div></div>');
         }
     }
     function streamDeliveryFailureHandling(new_message, error_content) {

@@ -1,10 +1,26 @@
-.bubble {
+.bubble[lang="chinese"] {
     padding: 10px;
     border-radius: 5px;
     position: relative;
     color: #000;
-    word-wrap: break-word;
+    /* 允许在单词内换行 */
     word-break: break-all;
+    /* 在长单词或URL地址内部进行换行 */
+    word-wrap: break-word;
+    /* 保留所有的空格和回车, 但允许换行 */
+    white-space: pre-wrap;
+}
+
+.bubble[lang="english"] {
+    padding: 10px;
+    border-radius: 5px;
+    position: relative;
+    color: #000;
+    /* 只能在半角空格或连字符处换行 */
+    word-break: keep-all;
+    /* 在长单词或URL地址内部进行换行 */
+    word-wrap: break-word;
+    /* 保留所有的空格和回车, 但允许换行 */
     white-space: pre-wrap;
 }
 
@@ -65,13 +81,13 @@
     background-color: #dadada;
     border-radius: 3px;
     -moz-user-select: none;
-    /*火狐*/
+    /* 火狐 */
     -webkit-user-select: none;
-    /*webkit浏览器*/
+    /* webkit浏览器 */
     -ms-user-select: none;
-    /*IE10*/
+    /* IE10 */
     -khtml-user-select: none;
-    /*早期浏览器*/
+    /* 早期浏览器 */
     user-select: none;
 }
 
@@ -85,7 +101,8 @@
 .item code {
     color: #ffffff;
     background-color: #282c34;
-    white-space: normal;
+    /* 允许在单词内换行 */
     word-break: break-all;
+    /* 保留所有的空格和回车, 但允许换行 */
     white-space: pre-wrap;
 }
