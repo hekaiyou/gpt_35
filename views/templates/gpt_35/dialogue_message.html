@@ -146,6 +146,7 @@
                 'new_message': dataNewMessage,
             }
             let currentLength = 0;
+            let lang = '';
             // 请求实时流传输接口
             var xhr = new XMLHttpRequest();
             xhr.onloadstart = function (e) {
@@ -170,6 +171,12 @@
                     // console.log('  - DisplayText = ' + currentText);
                     currentLength = e.target.response.length;
                     $('.bubble-left:last').append(currentText);
+                    if (currentLength > 9 && !lang) {
+                        lang = detectLanguage(e.target.response);
+                        if (lang == 'english') {
+                            $('.bubble-left:last').attr('lang', 'english');
+                        }
+                    }
                 }
             };
             xhr.onabort = function (e) {
