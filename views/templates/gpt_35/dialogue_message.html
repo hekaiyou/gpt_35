@@ -33,7 +33,7 @@
 <script>
     var autoNaming = false;
     var contentUpdates = false;
-    function processBubbleCodeBlocks(content) {
+    function replaceBubbleCodeBlocks(content) {
         let codeSwitch = true;
         while (content.search('```') != -1) {
             if (codeSwitch) {
@@ -48,7 +48,7 @@
     function processBubble(content) {
         content = content.replace(/</g, '&lt;');
         content = content.replace(/>/g, '&gt;');
-        content = processBubbleCodeBlocks(content);
+        content = replaceBubbleCodeBlocks(content);
         return content;
     }
     function addDetailsContent(value) {
