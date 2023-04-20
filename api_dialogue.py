@@ -192,7 +192,7 @@ async def gpt_35_update_dialogue_message_stream(
                 if delta_k == 'content':
                     yield delta_v
 
-    return StreamingResponse(data_streamer(), media_type='text/event-stream')
+    return StreamingResponse(data_streamer(), media_type='text/event-stream', headers={'X-Accel-Buffering': 'no'})
 
 
 @router.get(
