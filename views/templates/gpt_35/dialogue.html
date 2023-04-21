@@ -28,7 +28,7 @@
             return;
         }
         loadItemMark = false;
-        let searchData = { 'limit': 20, 'skip': loadItemSkip };
+        let searchData = { 'limit': 20, 'skip': loadItemSkip, 'orderby': 'update_time desc'};
         utilAjax(
             type = 'GET',
             url = '/api/gpt_35/dialogue/free/',
