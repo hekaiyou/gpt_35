@@ -4,6 +4,10 @@
 我的对话
 {% endblock %}
 
+{% block custom_head %}
+<script src="/static/bases/js/text-tool.js"></script>
+{% endblock %}
+
 {% block main %}
 <div id="details-content"></div>
 {% endblock %}
@@ -39,7 +43,7 @@
                 }
                 loadItemSkip += data.items.length;
                 data.items.forEach(function (value, index) {
-                    $('#details-content').append('<details class="itemDetails" onclick="event.preventDefault()" id="' + value.id + '"><summary>' + value.dialogue_name + '</summary></details>');
+                    $('#details-content').append('<details class="itemDetails" onclick="event.preventDefault()" id="' + value.id + '"><summary>' + detailsContentText(value.dialogue_name) + '</summary></details>');
                 });
                 $('.itemDetails').click(function () {
                     window.location.href = '/view/gpt_35/dialogue/message/' + $(this).attr('id') + '/';
