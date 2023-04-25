@@ -11,10 +11,12 @@
 {% block operate_left %}
 {% if item_id %}
 <a href="/view/gpt_35/dialogue/message/{{ item_id }}/">
-    <img src="/static/bases/material-icons/arrow_back_ios_new.svg" height="16px" />
+    <img src="/static/bases/material-icons/arrow_back_ios_new_fill.svg" />
 </a>
 {% else %}
-<a href="javascript:history.back(-1)">返回</a>
+<a href="javascript:history.back(-1)">
+    <img src="/static/bases/material-icons/arrow_back_ios_new_fill.svg" />
+</a>
 {% endif %}
 {% endblock %}
 
