@@ -10,7 +10,9 @@
 
 {% block operate_left %}
 {% if item_id %}
-<a href="/view/gpt_35/dialogue/message/{{ item_id }}/">返回</a>
+<a href="/view/gpt_35/dialogue/message/{{ item_id }}/">
+    <img src="/static/bases/material-icons/arrow_back_ios_new.svg" height="16px" />
+</a>
 {% else %}
 <a href="javascript:history.back(-1)">返回</a>
 {% endif %}
