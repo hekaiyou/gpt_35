@@ -74,6 +74,94 @@
         $('#new_message').val(new_message);
         addDetailsContent({role: 'system', content: error_content});
     }
+    function sendMessageStream() {
+        let dataNewMessage = $('#new_message').val().trim();
+        if (!/^[^\s]+(\s+[^\s]+)*$/.test(dataNewMessage)) {
+            swal({
+                icon: 'info',
+                title: '校验异常',
+                text: '新消息不能为空',
+                button: false,
+            });
+            checkResult = false;
+            return false;
+        }
+        var url = '/api/gpt_35/dialogue/{{ item_id }}/message/stream/free/'
+        var data = {
+            'new_message': dataNewMessage,
+        }
+        let currentLength = 0;
+        let lang = '';
+        // 请求实时流传输接口
+        var xhr = new XMLHttpRequest();
+        xhr.onloadstart = function (e) {
+            // 请求发出
+            addDetailsContent({role: 'user', content: dataNewMessage});
+            $('#new_message').val('');
+            $('#new_message').attr('disabled', 'disabled');
+            $('#updateItemStream').attr('disabled', 'disabled');
+            $('#updateItemStream').attr('aria-busy', 'true');
+            addDetailsContent({role: 'assistant', content: ''});
+        };
+        xhr.onprogress = function (e) {
+            // 正在发送和加载数据
+            if (!lang && currentLength > 9) {
+                lang = detectLanguage(e.target.response);
+                if (lang == 'english') {
+                    $('.bubble-left:last').attr('lang', 'english');
+                }
+            }
+            let currentText = e.target.response.slice(currentLength);
+            if (['`', '``', ' '].indexOf(currentText) != -1) {
+                // console.log('Skip(关键词不完整) Text = ' + currentText);
+            } else if (currentText.search('```') != -1 && currentText.split('```').length-1 != 2) {
+                // console.log('Skip(代码没有闭合) Text = ' + currentText);
+            } else {
+                // console.log('currentLength = ' + currentLength + '\n' + '  - SourceText = ' + currentText);
+                currentText = processBubble(currentText);
+                // console.log('  - DisplayText = ' + currentText);
+                currentLength = e.target.response.length;
+                $('.bubble-left:last').append(currentText);
+            }
+        };
+        xhr.onabort = function (e) {
+            // 请求中止, 比如用户调用了abort()方法
+            streamDeliveryFailureHandling(data['new_message'], '请求中止');
+        };
+        xhr.onerror = function (e) {
+            // 请求失败
+            streamDeliveryFailureHandling(data['new_message'], '请求失败');
+        };
+        xhr.onload = function (e) {
+            // 请求成功完成
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    // 请求响应正常
+                    // console.log('CompleteText = ' + xhr.responseText);
+                    contentUpdates = true;
+                } else {
+                    // 请求响应异常
+                    console.error('Response exception: ' + xhr.response);
+                    streamDeliveryFailureHandling(data['new_message'], '请求响应' + xhr.status + '异常');
+                }
+            }
+        };
+        xhr.ontimeout = function () {
+            // 请求超时, 未完成
+            console.error('The request for ' + url + ' timed out.');
+            streamDeliveryFailureHandling(data['new_message'], '请求超时');  
+        };
+        xhr.onloadend = function (e) {
+            // 请求完成, 不管成功或失败
+            $('#updateItemStream').attr('aria-busy', 'false');
+            $('#updateItemStream').removeAttr('disabled');
+            $('#new_message').removeAttr('disabled');
+        };
+        xhr.open('PUT', url, true);
+        xhr.setRequestHeader('content-type', 'application/json');
+        xhr.getResponseHeader('content-type', 'text/event-stream');
+        xhr.send(JSON.stringify(data));
+    }
     $(document).ready(function () {
         $.fn.autoHeight = function() {
             function autoHeight(elem) {
@@ -132,92 +220,13 @@
             );
         });
         $('#updateItemStream').click(function () {
-            let dataNewMessage = $('#new_message').val().trim();
-            if (!/^[^\s]+(\s+[^\s]+)*$/.test(dataNewMessage)) {
-                swal({
-                    icon: 'info',
-                    title: '校验异常',
-                    text: '新消息不能为空',
-                    button: false,
-                });
-                checkResult = false;
-                return false;
+            sendMessageStream();
+        });
+        $('#new_message').keydown(function(event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                sendMessageStream();
             }
-            var url = '/api/gpt_35/dialogue/{{ item_id }}/message/stream/free/'
-            var data = {
-                'new_message': dataNewMessage,
-            }
-            let currentLength = 0;
-            let lang = '';
-            // 请求实时流传输接口
-            var xhr = new XMLHttpRequest();
-            xhr.onloadstart = function (e) {
-                // 请求发出
-                addDetailsContent({role: 'user', content: dataNewMessage});
-                $('#new_message').val('');
-                $('#new_message').attr('disabled', 'disabled');
-                $('#updateItemStream').attr('disabled', 'disabled');
-                $('#updateItemStream').attr('aria-busy', 'true');
-                addDetailsContent({role: 'assistant', content: ''});
-            };
-            xhr.onprogress = function (e) {
-                // 正在发送和加载数据
-                if (!lang && currentLength > 9) {
-                    lang = detectLanguage(e.target.response);
-                    if (lang == 'english') {
-                        $('.bubble-left:last').attr('lang', 'english');
-                    }
-                }
-                let currentText = e.target.response.slice(currentLength);
-                if (['`', '``', ' '].indexOf(currentText) != -1) {
-                    // console.log('Skip(关键词不完整) Text = ' + currentText);
-                } else if (currentText.search('```') != -1 && currentText.split('```').length-1 != 2) {
-                    // console.log('Skip(代码没有闭合) Text = ' + currentText);
-                } else {
-                    // console.log('currentLength = ' + currentLength + '\n' + '  - SourceText = ' + currentText);
-                    currentText = processBubble(currentText);
-                    // console.log('  - DisplayText = ' + currentText);
-                    currentLength = e.target.response.length;
-                    $('.bubble-left:last').append(currentText);
-                }
-            };
-            xhr.onabort = function (e) {
-                // 请求中止, 比如用户调用了abort()方法
-                streamDeliveryFailureHandling(data['new_message'], '请求中止');
-            };
-            xhr.onerror = function (e) {
-                // 请求失败
-                streamDeliveryFailureHandling(data['new_message'], '请求失败');
-            };
-            xhr.onload = function (e) {
-                // 请求成功完成
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        // 请求响应正常
-                        // console.log('CompleteText = ' + xhr.responseText);
-                        contentUpdates = true;
-                    } else {
-                        // 请求响应异常
-                        console.error('Response exception: ' + xhr.response);
-                        streamDeliveryFailureHandling(data['new_message'], '请求响应' + xhr.status + '异常');
-                    }
-                }
-            };
-            xhr.ontimeout = function () {
-                // 请求超时, 未完成
-                console.error('The request for ' + url + ' timed out.');
-                streamDeliveryFailureHandling(data['new_message'], '请求超时');  
-            };
-            xhr.onloadend = function (e) {
-                // 请求完成, 不管成功或失败
-                $('#updateItemStream').attr('aria-busy', 'false');
-                $('#updateItemStream').removeAttr('disabled');
-                $('#new_message').removeAttr('disabled');
-            };
-            xhr.open('PUT', url, true);
-            xhr.setRequestHeader('content-type', 'application/json');
-            xhr.getResponseHeader('content-type', 'text/event-stream');
-            xhr.send(JSON.stringify(data));
         });
         $('#returnToList').click(function () {
             if (autoNaming && contentUpdates) {
