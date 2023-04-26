@@ -186,7 +186,7 @@
             success = function (data, textStatus) {
                 autoNaming = data.auto_naming;
                 addDetailsContent({role: 'system', content: data.dialogue_name});
-                data.messages.forEach(function (value, index) {
+                data.messages.slice(Number(!data.role_playing)).forEach(function (value, index) {
                     addDetailsContent(value);
                 });
             },

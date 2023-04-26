@@ -32,11 +32,15 @@
 <form id="form-content">
     <label>
         对话名称
-        <input type="text" id="dialogue_name" placeholder="新对话" value="新对话" required>
+        <input type="text" id="dialogue_name" placeholder="对话名称" value="新对话" required>
     </label>
     <label>
-        系统角色的人设
-        <input type="text" id="system_role" placeholder="你是一个乐于助人的助手。" value="你是一个乐于助人的助手。" required>
+        角色扮演的人设
+        <input type="text" id="system_role" placeholder="系统角色的人设" value="你是一个乐于助人的助手。" required>
+    </label>
+    <label>
+        <input type="checkbox" id="role_playing" placeholder="是否角色扮演" role="switch">
+        是否激活角色扮演
     </label>
 </form>
 {% endblock %}
@@ -62,6 +66,7 @@
             success = function (data, textStatus) {
                 $('#dialogue_name').val(data.dialogue_name);
                 $('#system_role').val(data.system_role);
+                $('#role_playing').prop('checked', data.role_playing);
             },
             complete = function (request, textStatus) { },
             success_reminder = false,
@@ -98,6 +103,7 @@
                 data = {
                     'dialogue_name': $('#dialogue_name').val(),
                     'system_role': $('#system_role').val(),
+                    'role_playing': $('#role_playing').prop('checked'),
                 },
                 data_format = 'json',
                 check = {
@@ -118,6 +124,7 @@
                 data = {
                     'dialogue_name': $('#dialogue_name').val(),
                     'system_role': $('#system_role').val(),
+                    'role_playing': $('#role_playing').prop('checked'),
                 },
                 data_format = 'json',
                 check = {
