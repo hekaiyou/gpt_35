@@ -169,7 +169,7 @@ async def gpt_35_update_dialogue_message_stream(
     configs = get_apis_configs(module)
     results, error_desc, response = gpt_35_api_stream(
         configs.openai_api_key,
-        messages,
+        messages[int(not dialogue_data['role_playing']):],
     )
     if not results:
         raise HTTPException(

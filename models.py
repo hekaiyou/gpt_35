@@ -13,6 +13,7 @@ class DialogueBase(BaseModel):
     """ 对话的基础模型
     id: ObjId = Field(alias='_id', title='对话ID')
     dialogue_name: Optional[str] = Field(title='对话名称', default='新对话')
+    role_playing: Optional[bool] = Field(title='是否角色扮演', default=False)
     system_role: Optional[str] = Field(title='系统角色的人设', default='你是一个乐于助人的助手。')
     messages: List[Dict] = Field(
         title='完整对话',
@@ -29,6 +30,7 @@ class DialogueBase(BaseModel):
     update_time: datetime = datetime.utcnow()
     """
     dialogue_name: Optional[str] = Field(title='对话名称', default='新对话')
+    role_playing: Optional[bool] = Field(title='是否角色扮演', default=False)
     system_role: Optional[str] = Field(title='系统角色的人设', default='你是一个乐于助人的助手。')
 
 
