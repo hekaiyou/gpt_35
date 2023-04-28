@@ -112,7 +112,7 @@
                 }
             }
             let currentText = e.target.response.slice(currentLength);
-            if (['`', '``', ' '].indexOf(currentText) != -1) {
+            if (['`', '\n`', '``', '\n``', ' '].indexOf(currentText) != -1) {
                 // console.log('Skip(关键词不完整) Text = ' + currentText);
             } else if (currentText.search('```') != -1 && currentText.split('```').length-1 != 2) {
                 // console.log('Skip(代码没有闭合) Text = ' + currentText);
