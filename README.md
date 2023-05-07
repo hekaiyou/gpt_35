@@ -24,8 +24,34 @@
 
 ## ⚙️ 应用配置
 
-| 应用模块 | 配置文件路径 | 环境变量描述 |
+| 应用模块 | 配置文件路径 | 描述 |
 | ------- | ------- | ------- |
 | core | `.env` | MongoDB 连接等关键配置 (应用运行不可缺少的环境变量) |
-| bases | `apis/bases/.env`   | [we-fast-api](https://github.com/hekaiyou/we-fast-api) 框架的基础配置 |
-| gpt_35 | `apis/gpt_35/.env` | [gpt_35](https://github.com/hekaiyou/gpt_35) 模块的运行配置 |
+| bases | `apis/bases/.env` | [we-fast-api](https://github.com/hekaiyou/we-fast-api) 框架的基础环境变量 |
+| gpt_35 | `apis/gpt_35/.env` | [gpt_35](https://github.com/hekaiyou/gpt_35) 模块的运行环境变量 |
+
+### .env
+
+| 环境变量 | 描述 | 类型 | 默认值 |
+| ------- | ------- | ------- | ------- |
+| MONGO_DB_HOST | MongoDB 连接地址 | str | 127.0.0.1 |
+| MONGO_DB_PORT | MongoDB 连接端口 | int | 27017 |
+| MONGO_DB_NAME | MongoDB 连接数据库 | str | test_database |
+| MONGO_DB_USERNAME | MongoDB 连接认证用户 | str |  |
+| MONGO_DB_PASSWORD | MongoDB 连接认证密码 | str |  |
+
+### apis/bases/.env
+
+| 环境变量 | 描述 | 类型 | 默认值 |
+| ------- | ------- | ------- | ------- |
+| APP_NAME | 服务的标题 | str | WeFastAPI |
+| APP_VERSION | 服务的版本号 | str | 0.0.1 |
+| APP_HOST | 服务的地址 | str | http://127.0.0.1:8083/ |
+| APP_HOME_PATH | 服务的主页路径 | str | /view/bases/home/ |
+
+### apis/gpt_35/.env
+
+| 环境变量 | 描述 | 类型 | 默认值 |
+| ------- | ------- | ------- | ------- |
+| OPENAI_API_KEY | OpenAI API key | str |  |
+
