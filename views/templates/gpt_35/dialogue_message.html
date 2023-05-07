@@ -35,6 +35,7 @@
 <script>
     var autoNaming = false;
     var contentUpdates = false;
+    var stopResponding = false;
     function replaceBubbleCodeBlocks(content) {
         let codeSwitch = true;
         while (content.search('```') != -1) {
@@ -99,8 +100,9 @@
             addDetailsContent({role: 'user', content: dataNewMessage});
             $('#new_message').val('');
             $('#new_message').attr('disabled', 'disabled');
-            $('#updateItemStream').attr('disabled', 'disabled');
-            $('#updateItemStream').attr('aria-busy', 'true');
+            // $('#updateItemStream').attr('disabled', 'disabled');
+            $('#updateItemStream').text('停止');
+            // $('#updateItemStream').attr('aria-busy', 'true');
             addDetailsContent({role: 'assistant', content: ''});
         };
         xhr.onprogress = function (e) {
@@ -123,10 +125,14 @@
                 currentLength = e.target.response.length;
                 $('.bubble-left:last').append(currentText);
             }
+            if (stopResponding) {
+                xhr.abort();
+                $('#updateItemStream').removeAttr('disabled');
+            }
         };
         xhr.onabort = function (e) {
             // 请求中止, 比如用户调用了abort()方法
-            streamDeliveryFailureHandling(data['new_message'], '请求中止');
+            streamDeliveryFailureHandling(data['new_message'], '停止响应');
         };
         xhr.onerror = function (e) {
             // 请求失败
@@ -153,8 +159,10 @@
         };
         xhr.onloadend = function (e) {
             // 请求完成, 不管成功或失败
-            $('#updateItemStream').attr('aria-busy', 'false');
-            $('#updateItemStream').removeAttr('disabled');
+            stopResponding = false;
+            // $('#updateItemStream').attr('aria-busy', 'false');
+            // $('#updateItemStream').removeAttr('disabled');
+            $('#updateItemStream').text('发送');
             $('#new_message').removeAttr('disabled');
         };
         xhr.open('PUT', url, true);
@@ -220,7 +228,12 @@
             );
         });
         $('#updateItemStream').click(function () {
-            sendMessageStream();
+            if ($('#updateItemStream').text() == '停止') {
+                stopResponding = true;
+                $('#updateItemStream').attr('disabled', 'disabled');
+            } else {
+                sendMessageStream();
+            }
         });
         $('#new_message').keydown(function(event) {
             if (event.keyCode == 13) {
