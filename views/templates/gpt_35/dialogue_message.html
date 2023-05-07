@@ -126,8 +126,8 @@
                 $('.bubble-left:last').append(currentText);
             }
             if (stopResponding) {
-                xhr.abort();
                 $('#updateItemStream').removeAttr('disabled');
+                xhr.abort();
             }
         };
         xhr.onabort = function (e) {
