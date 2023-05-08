@@ -137,23 +137,3 @@ OPENAI_API_KEY=sk-xxxxxxxxxxxx
 
 ## 👀 预览
 
-RUN pip install -r apis/gpt_35/requirements.txt
-
-docker build -t ai-speedup:latest .
-
-docker run -t -i -v /home/lighthouse/code/we-fast-api/files:/workspace/files -v /home/lighthouse/code/we-fast-api/logs:/workspace/logs -p 8089:8083 --env-file .env --env-file apis/bases/.env --env-file apis/gpt_35/.env ai-speedup:latest
-
-docker run -t -i -d -v /home/lighthouse/code/we-fast-api/files:/workspace/files -v /home/lighthouse/code/we-fast-api/logs:/workspace/logs -p 8089:8083 --env-file .env --env-file apis/bases/.env --env-file apis/gpt_35/.env ai-speedup:latest
-
-
-# A.B.C 大版本.新功能更新.小修改
-docker build -t ai-speedup:0.0.2 .
-
-docker run -t -i -d -v /home/lighthouse/code/we-fast-api/files:/workspace/files -p 8089:8083 --env-file .env --env-file apis/bases/.env --env-file apis/gpt_35/.env ai-speedup:0.0.2
-
-
-
-lsof -i:8083
-sudo kill -9 $(lsof -i:8083 -t)
-
-bj&QDx%W_&S1CClg
