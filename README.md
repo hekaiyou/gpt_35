@@ -4,33 +4,34 @@
 
 ## 📦 安装
 
-创建 Python3 版本的虚拟环境:
-
-```bash
-cd we-fast-api
-python -m venv venv
-source venv/bin/activate
-```
+- 开发语言: Python >= 3.7
+- 数据库: MongoDB >= 4.0
 
 1. 下载 [we-fast-api](https://github.com/hekaiyou/we-fast-api) 框架代码, 在终端执行:
    ```shell
    git clone https://github.com/hekaiyou/we-fast-api.git
    ```
-2. 先安装 [we-fast-api](https://github.com/hekaiyou/we-fast-api) 框架依赖, 在终端执行:
+2. 创建 Python3 版本的虚拟环境, 在终端执行:
+   ```shell
+   cd we-fast-api
+   python3 -m venv venv
+   source venv/bin/activate
    ```
+3. 先安装 [we-fast-api](https://github.com/hekaiyou/we-fast-api) 框架依赖, 在终端执行:
+   ```shell
    pip install -r requirements.txt
    ```
-3. 进入到 `we-fast-api/apis` 目录下, 下载 [gpt_35](https://github.com/hekaiyou/gpt_35) 模块代码, 在终端执行:
+4. 进入到 `we-fast-api/apis` 目录下, 下载 [gpt_35](https://github.com/hekaiyou/gpt_35) 模块代码, 在终端执行:
    ```shell
-   cd we-fast-api/apis
+   cd apis
    git clone https://github.com/hekaiyou/gpt_35.git
    ```
-4. 再安装 [gpt_35](https://github.com/hekaiyou/gpt_35) 模块依赖, 同样在终端执行:
-   ```
+5. 再安装 [gpt_35](https://github.com/hekaiyou/gpt_35) 模块依赖, 同样在终端执行:
+   ```shell
    pip install -r requirements.txt
    ```
 
-## ⚙️ 应用配置
+## ⚙️ 配置
 
 环境变量读取的优先级排序, 有同名环境变量时, 取优先级高的变量值:
 
@@ -128,5 +129,7 @@ OPENAI_API_KEY=sk-xxxxxxxxxxxx
 | ------- | ------- | ------- | ------- |
 | OPENAI_API_KEY | OpenAI API key | str |  |
 
+## ✨ 启动
 
+## 👀 预览
 
