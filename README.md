@@ -18,8 +18,11 @@
 2. 创建 Python3 版本的虚拟环境, 在终端执行:
    ```shell
    cd we-fast-api
-   python3 -m venv venv
+   python -m venv venv
+   # Linux 下执行
    source venv/bin/activate
+   # Windows 下执行
+   # venv/Scripts/activate
    ```
 3. 先安装 [we-fast-api](https://github.com/hekaiyou/we-fast-api) 框架依赖, 在终端执行:
    ```shell
@@ -32,6 +35,7 @@
    ```
 5. 再安装 [gpt_35](https://github.com/hekaiyou/gpt_35) 模块依赖, 同样在终端执行:
    ```shell
+   cd gpt_35
    pip install -r requirements.txt
    ```
 
