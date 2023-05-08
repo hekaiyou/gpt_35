@@ -19,9 +19,9 @@
    ```shell
    cd we-fast-api
    python -m venv venv
-   # Linux 下执行
+   # Linux下执行
    source venv/bin/activate
-   # Windows 下执行
+   # Windows下执行
    # venv/Scripts/activate
    ```
 3. 先安装 [we-fast-api](https://github.com/hekaiyou/we-fast-api) 框架依赖, 在终端执行:
@@ -138,6 +138,22 @@ OPENAI_API_KEY=sk-xxxxxxxxxxxx
 | OPENAI_API_KEY | OpenAI API key | str |  |
 
 ## ✨ 启动
+
+在框架根路径下, 进入虚拟环境并执行:
+
+```bash
+# Linux下执行
+source venv/bin/activate
+# Windows下执行
+# venv/Scripts/activate
+python main.py
+```
+
+服务启动后, 可以访问以下文档和应用地址:
+
+- 通过 http://127.0.0.1:8083/ 访问基础 Web 站点
+- 通过 http://127.0.0.1:8083/docs/ 访问由 [Swagger UI](https://github.com/swagger-api/swagger-ui) API 文档
+- 通过 http://127.0.0.1:8083/redoc/ 访问由 [ReDoc](https://github.com/Rebilly/ReDoc) API 文档
 
 ## 👀 预览
 
