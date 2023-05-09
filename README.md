@@ -85,6 +85,7 @@ MONGO_DB_NAME=ai_speedup
 APP_NAME=AI小助手
 APP_VERSION=1.0.0
 APP_HOST=http://127.0.0.1:8083/
+APP_HOME_PATH_ANON=/view/gpt_35/dialogue/
 TOKEN_EXPIRE_MINUTE=10080
 ```
 
@@ -96,6 +97,7 @@ TOKEN_EXPIRE_MINUTE=10080
 | APP_VERSION | 服务的版本号, 通常按照 `A.B.C`(*大版本.新功能发布.小更新*) 规则 | str | 0.0.1 |
 | APP_HOST | 服务的地址 | str | http://127.0.0.1:8083/ |
 | APP_HOME_PATH | 服务的主页路径 | str | /view/bases/home/ |
+| APP_HOME_PATH_ANON | 服务的主页路径 | str | /view/bases/home/ |
 | APP_WORKERS_NUM | 服务的工作进程总数 (workers) | int | 1 |
 | APP_DOCS | 服务的 Swagger 文档 (生产建议关闭) | bool | True |
 | APP_REDOC | 服务的 ReDoc 文档 (生产建议关闭) | bool | True |
