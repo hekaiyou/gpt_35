@@ -11,13 +11,14 @@
 
 ### 操作步骤
 
-1. 下载 [we-fast-api](https://github.com/hekaiyou/we-fast-api) 框架代码, 在终端执行:
+1. 下载 [we-fast-api](https://github.com/hekaiyou/we-fast-api) 框架代码并重命名为 `ai_speedup` 目录, 在终端执行:
    ```shell
    git clone https://github.com/hekaiyou/we-fast-api.git ai_speedup
    ```
 2. 创建 Python3 版本的虚拟环境, 在终端执行:
    ```shell
    cd ai_speedup
+   # 如果 python 找不到命令可以尝试 python3 命令
    python -m venv venv
    # Linux下执行
    source venv/bin/activate
