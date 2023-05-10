@@ -13,11 +13,11 @@
 
 1. 下载 [we-fast-api](https://github.com/hekaiyou/we-fast-api) 框架代码, 在终端执行:
    ```shell
-   git clone https://github.com/hekaiyou/we-fast-api.git
+   git clone https://github.com/hekaiyou/we-fast-api.git ai_speedup
    ```
 2. 创建 Python3 版本的虚拟环境, 在终端执行:
    ```shell
-   cd we-fast-api
+   cd ai_speedup
    python -m venv venv
    # Linux下执行
    source venv/bin/activate
@@ -28,7 +28,7 @@
    ```shell
    pip install -r requirements.txt
    ```
-4. 进入到 `we-fast-api/apis` 目录下, 下载 [gpt_35](https://github.com/hekaiyou/gpt_35) 模块代码, 在终端执行:
+4. 进入到 `ai_speedup/apis` 目录下, 下载 [gpt_35](https://github.com/hekaiyou/gpt_35) 模块代码, 在终端执行:
    ```shell
    cd apis
    git clone https://github.com/hekaiyou/gpt_35.git
@@ -158,4 +158,5 @@ python main.py
 - 通过 http://127.0.0.1:8083/redoc/ 访问由 [ReDoc](https://github.com/Rebilly/ReDoc) API 文档
 
 ## 👀 预览
+
 
