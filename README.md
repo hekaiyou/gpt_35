@@ -160,4 +160,7 @@ python main.py
 
 ## 👀 预览
 
+![image](docu/gpt-35-demo.png)
+
+## #️⃣ 部署
 
