@@ -164,3 +164,46 @@ python main.py
 
 ## #️⃣ 部署
 
+框架中提供了一个基础的 `Dockerfile` 来构建镜像:
+
+```bash
+FROM python:3.10.11
+WORKDIR /workspace
+COPY . /workspace/
+RUN pip install -r requirements.txt
+# Build serve - Start
+# For example: RUN pip install -r apis/demo_serve/requirements.txt
+# Build serve - End
+EXPOSE 8083
+CMD ["python", "main.py"]
+```
+
+在 *# Build serve - Start* 和 *# Build serve - End* 这两行的中间添加 `gpt_35` 模块的构建步骤:
+
+```bash
+......
+# Build serve - Start
+RUN pip install -r apis/gpt_35/requirements.txt
+# Build serve - End
+......
+```
+
+使用这个 `Dockerfile` 来构建镜像:
+
+```shell
+docker build -t ai_speedup:1.0.0 .
+```
+
+先检查服务在容器内是否正常运行:
+
+```shell
+docker run -t -i -p 8089:8083 --env-file .env --env-file apis/bases/.env --env-file apis/gpt_35/.env ai_speedup:1.0.0
+```
+
+| 构建参数 | 作用描述 |
+| ------- | ------- |
+| --env-file .env | 从文件中读取 `core` 模块的环境变量 |
+| --env-file apis/bases/.env | 从文件中读取 `bases` 模块的环境变量 |
+| --env-file apis/gpt_35/.env | 从文件中读取 `gpt_35` 模块的环境变量 |
+
+
