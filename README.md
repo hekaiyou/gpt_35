@@ -162,7 +162,7 @@ python main.py
 
 ![image](docu/gpt-35-demo.png)
 
-## #️⃣ 部署
+## 💨 部署
 
 框架中提供了一个基础的 `Dockerfile` 来构建镜像:
 
@@ -194,14 +194,16 @@ RUN pip install -r apis/gpt_35/requirements.txt
 docker build -t ai_speedup:1.0.0 .
 ```
 
-先检查服务在容器内是否正常运行:
+先检查服务在镜像容器内是否正常运行:
 
 ```shell
-docker run -t -i -p 8089:8083 --env-file .env --env-file apis/bases/.env --env-file apis/gpt_35/.env ai_speedup:1.0.0
+docker run -t -i -v /{LOCAL_DIR}/files:/workspace/files -v /{LOCAL_DIR}/logs:/workspace/logs -p 8089:8083 --env-file .env --env-file apis/bases/.env --env-file apis/gpt_35/.env ai_speedup:1.0.0
 ```
 
 | 构建参数 | 作用描述 |
 | ------- | ------- |
+| -v /{LOCAL_DIR}/files:/workspace/files | 持久化的文件存储路径 |
+| -v /{LOCAL_DIR}/logs:/workspace/logs | 持久化的日志存储路径 |
 | --env-file .env | 从文件中读取 `core` 模块的环境变量 |
 | --env-file apis/bases/.env | 从文件中读取 `bases` 模块的环境变量 |
 | --env-file apis/gpt_35/.env | 从文件中读取 `gpt_35` 模块的环境变量 |
