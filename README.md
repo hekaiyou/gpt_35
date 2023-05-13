@@ -208,4 +208,8 @@ docker run -t -i -v /{LOCAL_DIR}/files:/workspace/files -v /{LOCAL_DIR}/logs:/wo
 | --env-file apis/bases/.env | 从文件中读取 `bases` 模块的环境变量 |
 | --env-file apis/gpt_35/.env | 从文件中读取 `gpt_35` 模块的环境变量 |
 
+确认服务正常后, 添加 `-d` 参数将容器放后台运行:
 
+```shell
+docker run -t -i -d -v /{LOCAL_DIR}/files:/workspace/files -v /{LOCAL_DIR}/logs:/workspace/logs -p 8089:8083 --env-file .env --env-file apis/bases/.env --env-file apis/gpt_35/.env ai_speedup:1.0.0
+```
