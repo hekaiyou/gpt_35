@@ -213,3 +213,5 @@ docker run -t -i -v /{LOCAL_DIR}/files:/workspace/files -v /{LOCAL_DIR}/logs:/wo
 ```shell
 docker run -t -i -d -v /{LOCAL_DIR}/files:/workspace/files -v /{LOCAL_DIR}/logs:/workspace/logs -p 8089:8083 --env-file .env --env-file apis/bases/.env --env-file apis/gpt_35/.env ai_speedup:1.0.0
 ```
+
+*最后请确认框架根路径下的 `.env` 配置文件中, 已经使用 `openssl rand -hex 32` 生成新密钥, 并设置成环境变量 `TOKEN_SECRET_KEY` 的新值。*
