@@ -164,7 +164,7 @@ python main.py
 
 ## 💨 部署
 
-框架中提供了一个基础的 `Dockerfile` 来构建镜像:
+框架中提供了一个基础的 `Dockerfile` 来构建镜像, 在框架根路径下创建 `Dockerfile` 文件:
 
 ```bash
 FROM python:3.10.11
