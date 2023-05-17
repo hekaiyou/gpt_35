@@ -174,7 +174,7 @@ WORKDIR /workspace
 COPY . /workspace/
 RUN pip install -r requirements.txt
 # Build serve - Start
-# For example: RUN pip install -r apis/demo_serve/requirements.txt
+# For example: RUN pip install -r apis/my_module/requirements.txt
 # Build serve - End
 EXPOSE 8083
 CMD ["python", "main.py"]
@@ -223,19 +223,19 @@ docker run -t -i -d -v /{LOCAL_DIR}/files:/workspace/files -v /{LOCAL_DIR}/logs:
 以下操作在 Ubuntu 系统下进行, 首先在框架根路径下创建自启动服务配置文件:
 
 ```shell
-vim demo.service
+vim ai_speedup.service
 ```
 
-编辑自启动服务配置文件 `demo.service` 的内容:
+编辑自启动服务配置文件 `ai_speedup.service` 的内容:
 
 ```shell
 [Unit]
-Description=demo
+Description=ai_speedup
 
 [Service]
 Type=simple
-WorkingDirectory=/{LOCAL_DIR}/demo
-ExecStart=/{LOCAL_DIR}/demo/venv/bin/python main.py
+WorkingDirectory=/{LOCAL_DIR}/ai_speedup
+ExecStart=/{LOCAL_DIR}/ai_speedup/venv/bin/python main.py
 Restart=on-failure
 RestartSec=30s
 
@@ -245,12 +245,12 @@ WantedBy=multi-user.target
 
 完成配置文件后, 就可以执行下列命令配置和管理服务:
 
-- 注册服务: sudo systemctl enable /{LOCAL_DIR}/demo/demo.service
-- 启动服务: sudo systemctl start demo
+- 注册服务: sudo systemctl enable /{LOCAL_DIR}/ai_speedup/ai_speedup.service
+- 启动服务: sudo systemctl start ai_speedup
 - 更新配置文件: sudo systemctl daemon-reload
-- 重新启动服务: sudo systemctl restart demo
-- 查看服务启动状态: sudo service demo status
-- 查看服务日志: sudo journalctl -u demo
+- 重新启动服务: sudo systemctl restart ai_speedup
+- 查看服务启动状态: sudo service ai_speedup status
+- 查看服务日志: sudo journalctl -u ai_speedup
 - 清理10秒之前的日志: sudo journalctl --vacuum-time=10s
 - 清理2小时之前的日志: sudo journactl --vacuum-time=2h
 - 清理7天之前的日志: sudo journalctl --vacuum-time=7d
