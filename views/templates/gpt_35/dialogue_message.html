@@ -149,6 +149,15 @@
                     // 请求响应异常
                     console.error('Response exception: ' + xhr.response);
                     streamDeliveryFailureHandling(data['new_message'], '请求响应' + xhr.status + '异常');
+                    let errDetail = JSON.parse(xhr.responseText).detail;
+                    if (errDetail.includes('(Please include the request ID')) {
+                        errDetail = errDetail.split('(Please include the request ID')[0];
+                    }
+                    swal({
+                        icon: 'info',
+                        text: errDetail,
+                        button: false,
+                    });
                 }
             }
         };
